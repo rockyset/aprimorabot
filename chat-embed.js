@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Cria o iframe
   var iframe = document.createElement("iframe");
-  iframe.src = `https://app.rockyset.com/bot/${botId}`;
+  iframe.src = `https://app.rockyset.com/version-test/bot/${botId}`;
   iframe.style.width = "100%";
   iframe.style.height = "100%";
   iframe.style.border = "0";
