@@ -1,9 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
   var config = window._rockyset || {};
-  var botId = config.id || "DEMO-ID";
+  var botId = config.id;
+
+  if (!botId) {
+    console.warn("❌ Rockyset Chat Embed: Nenhum ID foi definido. Abortando carregamento.");
+    return;
+  }
+
+  // Captura a URL atual da página
+  var currentPageURL = encodeURIComponent(window.location.href);
 
   // Cria botão flutuante
-  var launcher = document.createElement("button");
+  var launcher = document.createElement('button');
   launcher.innerHTML = "💬";
   launcher.style.position = "fixed";
   launcher.style.bottom = "20px";
@@ -17,7 +25,16 @@ document.addEventListener("DOMContentLoaded", function () {
   launcher.style.cursor = "pointer";
   launcher.style.zIndex = "99999";
 
-  // Container do iframe
+  launcher.onclick = function () {
+    var iframe = document.getElementById("rockysetChatFrame");
+    if (iframe) {
+      iframe.style.display = (iframe.style.display === "none") ? "block" : "none";
+    }
+  };
+
+  document.body.appendChild(launcher);
+
+  // Cria container do chat
   var chatContainer = document.createElement("div");
   chatContainer.id = "rockysetChatFrame";
   chatContainer.style.position = "fixed";
@@ -30,20 +47,14 @@ document.addEventListener("DOMContentLoaded", function () {
   chatContainer.style.display = "none";
   chatContainer.style.boxShadow = "0 0 15px rgba(0,0,0,0.3)";
 
-  // Cria o iframe
+  // Cria o iframe e adiciona a page_url como parâmetro
   var iframe = document.createElement("iframe");
-  iframe.src = `https://app.rockyset.com/version-test/bot/${botId}`;
+  iframe.src = `https://app.rockyset.com/bot/${botId}?page_url=${currentPageURL}`;
   iframe.style.width = "100%";
   iframe.style.height = "100%";
   iframe.style.border = "0";
   iframe.style.borderRadius = "10px";
 
   chatContainer.appendChild(iframe);
-
-  launcher.onclick = function () {
-    chatContainer.style.display = (chatContainer.style.display === "none") ? "block" : "none";
-  };
-
-  document.body.appendChild(launcher);
   document.body.appendChild(chatContainer);
 });
