@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Cria o iframe e adiciona a page_url como parâmetro
   var iframe = document.createElement("iframe");
-  iframe.src = `https://app.rockyset.com/version-test/bot/${botId}?page_url=${currentPageURL}`;
+  iframe.src = `https://app.aprimorabot.com.br/version-test/bot/${botId}?page_url=${currentPageURL}`;
   iframe.style.width = "100%";
   iframe.style.height = "100%";
   iframe.style.border = "0";
