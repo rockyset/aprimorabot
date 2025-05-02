@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var botId = config.id;
 
   if (!botId) {
-    console.warn("❌ Rockyset Chat Embed: Nenhum ID foi definido. Abortando carregamento.");
+    console.warn("❌ Aprimora Bot Embed: Nenhum ID foi definido. Abortando carregamento.");
     return;
   }
 
