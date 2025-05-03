@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
   launcher.style.padding = "0";
   launcher.style.overflow = "hidden";
 
-  // Ícone do widget
+  // Ícone
   var img = document.createElement("img");
   img.src = config.iconUrl;
   img.style.width = "100%";
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
   img.style.display = "block";
   launcher.appendChild(img);
 
-  // Saudação (se não for autoOpen e houver greeting)
+  // Saudação (exibe apenas se autoOpen for falso e houver mensagem)
   if (!config.autoOpen && config.greetingMessage) {
     var greeting = document.createElement("div");
     greeting.innerText = config.greetingMessage;
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
     launcher.style.opacity = "1";
   }, 500);
 
-  // Cria o container do chat
+  // Chat container
   var chatContainer = document.createElement("div");
   chatContainer.id = "aprimorabotChatFrame";
   chatContainer.style.position = "fixed";
@@ -88,9 +88,8 @@ document.addEventListener("DOMContentLoaded", function () {
   chatContainer.style.borderRadius = "10px";
   chatContainer.style.overflow = "hidden";
 
-  // Adiciona iframe ao container
   var iframe = document.createElement("iframe");
-  iframe.src = `https://app.aprimorabot.com.br/version-test/bot/${botId}?page_url=${currentPageURL}`;
+  iframe.src = `https://app.aprimorabot.com.br/bot/${botId}?page_url=${currentPageURL}`;
   iframe.style.width = "100%";
   iframe.style.height = "100%";
   iframe.style.border = "0";
@@ -98,10 +97,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.body.appendChild(chatContainer);
 
-  // ✅ Abre automaticamente após tempo de renderização
+  // ✅ Abre automaticamente com segurança após renderização
   setTimeout(function () {
     if (config.autoOpen === true) {
-      chatContainer.style.display = "block";
+      var frame = document.getElementById("aprimorabotChatFrame");
+      if (frame) {
+        frame.style.display = "block";
+      }
     }
-  }, 100);
+  }, 500);
 });
