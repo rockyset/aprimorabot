@@ -1,4 +1,8 @@
-window.onload = function () {
+(function waitUntilReady() {
+  if (document.readyState !== "complete") {
+    return setTimeout(waitUntilReady, 100);
+  }
+
   var config = window._aprimorabot || {};
   var botId = config.id;
 
@@ -26,7 +30,6 @@ window.onload = function () {
   launcher.style.padding = "0";
   launcher.style.overflow = "hidden";
 
-  // Ícone
   var img = document.createElement("img");
   img.src = config.iconUrl;
   img.style.width = "100%";
@@ -35,7 +38,7 @@ window.onload = function () {
   img.style.display = "block";
   launcher.appendChild(img);
 
-  // Saudação (aparece só se autoOpen for falso e tiver mensagem)
+  // Saudação (só se autoOpen for falso e tiver greetingMessage)
   if (!config.autoOpen && config.greetingMessage) {
     var greeting = document.createElement("div");
     greeting.innerText = config.greetingMessage;
@@ -96,9 +99,9 @@ window.onload = function () {
   chatContainer.appendChild(iframe);
   document.body.appendChild(chatContainer);
 
-  // Verificação em loop até garantir que o chat seja aberto se autoOpen = true
+  // Tenta abrir automaticamente caso configurado
   function tryAutoOpen(attempts = 0) {
-    const frame = document.getElementById("aprimorabotChatFrame");
+    var frame = document.getElementById("aprimorabotChatFrame");
     if (config.autoOpen === true && frame) {
       frame.style.display = "block";
     } else if (attempts < 10) {
@@ -106,5 +109,5 @@ window.onload = function () {
     }
   }
 
-  setTimeout(() => tryAutoOpen(), 300);
-};
+  setTimeout(() => tryAutoOpen(), 500);
+})();
