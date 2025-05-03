@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
   launcher.style.padding = "0";
   launcher.style.overflow = "hidden";
 
-  // Adiciona imagem do botão
+  // Ícone do widget
   var img = document.createElement("img");
   img.src = config.iconUrl;
   img.style.width = "100%";
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
   img.style.display = "block";
   launcher.appendChild(img);
 
-  // Saudação (somente se autoOpen for false e houver mensagem)
+  // Saudação (se não for autoOpen e houver greeting)
   if (!config.autoOpen && config.greetingMessage) {
     var greeting = document.createElement("div");
     greeting.innerText = config.greetingMessage;
@@ -61,7 +61,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 1000);
   }
 
-  // Ação ao clicar no botão
   launcher.onclick = function () {
     var iframe = document.getElementById("aprimorabotChatFrame");
     if (iframe) {
@@ -70,13 +69,11 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   document.body.appendChild(launcher);
-
-  // Fade-in do botão
   setTimeout(function () {
     launcher.style.opacity = "1";
   }, 500);
 
-  // Cria container do chat
+  // Cria o container do chat
   var chatContainer = document.createElement("div");
   chatContainer.id = "aprimorabotChatFrame";
   chatContainer.style.position = "fixed";
@@ -91,19 +88,20 @@ document.addEventListener("DOMContentLoaded", function () {
   chatContainer.style.borderRadius = "10px";
   chatContainer.style.overflow = "hidden";
 
-  // Cria iframe com a URL do bot
+  // Adiciona iframe ao container
   var iframe = document.createElement("iframe");
   iframe.src = `https://app.aprimorabot.com.br/version-test/bot/${botId}?page_url=${currentPageURL}`;
   iframe.style.width = "100%";
   iframe.style.height = "100%";
   iframe.style.border = "0";
-
-  // Adiciona iframe ao container e container ao body
   chatContainer.appendChild(iframe);
+
   document.body.appendChild(chatContainer);
 
-  // Abre automaticamente se configurado
-  if (config.autoOpen === true) {
-    chatContainer.style.display = "block";
-  }
+  // ✅ Abre automaticamente após tempo de renderização
+  setTimeout(function () {
+    if (config.autoOpen === true) {
+      chatContainer.style.display = "block";
+    }
+  }, 100);
 });
