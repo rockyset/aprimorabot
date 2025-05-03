@@ -1,8 +1,4 @@
-(function waitUntilReady() {
-  if (document.readyState !== "complete") {
-    return setTimeout(waitUntilReady, 100);
-  }
-
+document.addEventListener("DOMContentLoaded", function () {
   var config = window._aprimorabot || {};
   var botId = config.id;
 
@@ -11,58 +7,24 @@
     return;
   }
 
+  // Captura a URL atual da página
   var currentPageURL = encodeURIComponent(window.location.href);
 
   // Cria botão flutuante
   var launcher = document.createElement('button');
+  launcher.innerHTML = ""; // sem emoji
+  launcher.style.backgroundImage = `url(${config.iconUrl})`;
+  launcher.style.backgroundSize = "cover";
+  launcher.style.backgroundColor = config.primaryColor || "#007bff";
   launcher.style.position = "fixed";
   launcher.style.bottom = "20px";
   launcher.style.right = "20px";
   launcher.style.width = "60px";
   launcher.style.height = "60px";
   launcher.style.borderRadius = "50%";
-  launcher.style.backgroundColor = config.primaryColor || "#007bff";
   launcher.style.border = "none";
   launcher.style.cursor = "pointer";
   launcher.style.zIndex = "99999";
-  launcher.style.opacity = "0";
-  launcher.style.transition = "opacity 0.5s ease";
-  launcher.style.padding = "0";
-  launcher.style.overflow = "hidden";
-
-  var img = document.createElement("img");
-  img.src = config.iconUrl;
-  img.style.width = "100%";
-  img.style.height = "100%";
-  img.style.borderRadius = "50%";
-  img.style.display = "block";
-  launcher.appendChild(img);
-
-  // Saudação (só se autoOpen for falso e tiver greetingMessage)
-  if (!config.autoOpen && config.greetingMessage) {
-    var greeting = document.createElement("div");
-    greeting.innerText = config.greetingMessage;
-    greeting.style.position = "fixed";
-    greeting.style.bottom = "90px";
-    greeting.style.right = "20px";
-    greeting.style.padding = "10px 15px";
-    greeting.style.backgroundColor = config.secondaryColor || "#ffffff";
-    greeting.style.color = "#000";
-    greeting.style.borderRadius = "10px";
-    greeting.style.boxShadow = "0 0 10px rgba(0,0,0,0.1)";
-    greeting.style.zIndex = "99999";
-    greeting.style.opacity = "0";
-    greeting.style.transition = "opacity 0.5s ease";
-    greeting.style.fontFamily = "Arial, sans-serif";
-    greeting.style.fontSize = "14px";
-    greeting.style.maxWidth = "260px";
-    greeting.style.lineHeight = "1.4";
-    document.body.appendChild(greeting);
-
-    setTimeout(function () {
-      greeting.style.opacity = "1";
-    }, 1000);
-  }
 
   launcher.onclick = function () {
     var iframe = document.getElementById("aprimorabotChatFrame");
@@ -72,11 +34,8 @@
   };
 
   document.body.appendChild(launcher);
-  setTimeout(function () {
-    launcher.style.opacity = "1";
-  }, 500);
 
-  // Chat container
+  // Cria container do chat
   var chatContainer = document.createElement("div");
   chatContainer.id = "aprimorabotChatFrame";
   chatContainer.style.position = "fixed";
@@ -91,23 +50,21 @@
   chatContainer.style.borderRadius = "10px";
   chatContainer.style.overflow = "hidden";
 
+  // Cria o iframe
   var iframe = document.createElement("iframe");
-  iframe.src = `https://app.aprimorabot.com.br/version-test/bot/${botId}?page_url=${currentPageURL}`;
+  iframe.src = `https://app.aprimorabot.com.br/version-test/version-test/bot/${botId}?page_url=${currentPageURL}`;
   iframe.style.width = "100%";
   iframe.style.height = "100%";
   iframe.style.border = "0";
+  iframe.style.borderRadius = "10px";
+
   chatContainer.appendChild(iframe);
   document.body.appendChild(chatContainer);
 
-  // Tenta abrir automaticamente caso configurado
-  function tryAutoOpen(attempts = 0) {
-    var frame = document.getElementById("aprimorabotChatFrame");
-    if (config.autoOpen === true && frame) {
-      frame.style.display = "block";
-    } else if (attempts < 10) {
-      setTimeout(() => tryAutoOpen(attempts + 1), 300);
+  // Aguarda o iframe ser inserido antes de abrir
+  setTimeout(() => {
+    if (config.autoOpen === true) {
+      chatContainer.style.display = "block";
     }
-  }
-
-  setTimeout(() => tryAutoOpen(), 500);
-})();
+  }, 500);
+});
