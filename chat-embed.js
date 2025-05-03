@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+window.onload = function () {
   var config = window._aprimorabot || {};
   var botId = config.id;
 
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
   img.style.display = "block";
   launcher.appendChild(img);
 
-  // Saudação (só aparece se autoOpen for falso e houver mensagem)
+  // Saudação (aparece só se autoOpen for falso e tiver mensagem)
   if (!config.autoOpen && config.greetingMessage) {
     var greeting = document.createElement("div");
     greeting.innerText = config.greetingMessage;
@@ -96,18 +96,15 @@ document.addEventListener("DOMContentLoaded", function () {
   chatContainer.appendChild(iframe);
   document.body.appendChild(chatContainer);
 
-  // Função segura para autoOpen com verificação
+  // Verificação em loop até garantir que o chat seja aberto se autoOpen = true
   function tryAutoOpen(attempts = 0) {
     const frame = document.getElementById("aprimorabotChatFrame");
     if (config.autoOpen === true && frame) {
       frame.style.display = "block";
     } else if (attempts < 10) {
       setTimeout(() => tryAutoOpen(attempts + 1), 300);
-    } else {
-      console.warn("❌ AprimoraBot: autoOpen falhou após várias tentativas.");
     }
   }
 
-  // Inicia a tentativa
   setTimeout(() => tryAutoOpen(), 300);
-});
+};
