@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
   launcher.style.padding = "0";
   launcher.style.overflow = "hidden";
 
-  // Adiciona imagem (esperada como obrigatória)
+  // Adiciona imagem obrigatória
   var img = document.createElement("img");
   img.src = config.iconUrl;
   img.style.width = "100%";
@@ -91,7 +91,6 @@ document.addEventListener("DOMContentLoaded", function () {
   chatContainer.style.borderRadius = "10px";
   chatContainer.style.overflow = "hidden";
 
-  // Cria o iframe
   var iframe = document.createElement("iframe");
   iframe.src = `https://app.aprimorabot.com.br/version-test/bot/${botId}?page_url=${currentPageURL}`;
   iframe.style.width = "100%";
@@ -100,4 +99,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   chatContainer.appendChild(iframe);
   document.body.appendChild(chatContainer);
+
+  // Abre automaticamente se configurado
+  if (config.autoOpen === true) {
+    chatContainer.style.display = "block";
+  }
 });
