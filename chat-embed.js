@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
   img.style.display = "block";
   launcher.appendChild(img);
 
-  // Saudação (apenas se autoOpen for false e mensagem existir)
+  // Saudação (somente se autoOpen for false e houver mensagem)
   if (!config.autoOpen && config.greetingMessage) {
     var greeting = document.createElement("div");
     greeting.innerText = config.greetingMessage;
@@ -91,30 +91,19 @@ document.addEventListener("DOMContentLoaded", function () {
   chatContainer.style.borderRadius = "10px";
   chatContainer.style.overflow = "hidden";
 
+  // Cria iframe com a URL do bot
   var iframe = document.createElement("iframe");
   iframe.src = `https://app.aprimorabot.com.br/version-test/bot/${botId}?page_url=${currentPageURL}`;
   iframe.style.width = "100%";
   iframe.style.height = "100%";
   iframe.style.border = "0";
 
+  // Adiciona iframe ao container e container ao body
   chatContainer.appendChild(iframe);
   document.body.appendChild(chatContainer);
 
-  // Função robusta para garantir abertura automática
-  function tryAutoOpen(retries = 10) {
-    if (config.autoOpen === true) {
-      var iframeEl = document.getElementById("aprimorabotChatFrame");
-      if (iframeEl) {
-        iframeEl.style.display = "block";
-      } else if (retries > 0) {
-        setTimeout(function () {
-          tryAutoOpen(retries - 1);
-        }, 100);
-      }
-    }
+  // Abre automaticamente se configurado
+  if (config.autoOpen === true) {
+    chatContainer.style.display = "block";
   }
-
-  setTimeout(function () {
-    tryAutoOpen();
-  }, 300);
 });
