@@ -1,24 +1,11 @@
-(function waitForConfig(attempts = 0) {
-  if (typeof window._aprimorabot === "undefined") {
-    if (attempts < 20) {
-      return setTimeout(() => waitForConfig(attempts + 1), 200);
-    } else {
-      console.warn("❌ Aprimora Bot: Configuração não encontrada após várias tentativas.");
-      return;
-    }
-  }
-
-  const config = window._aprimorabot;
+document.addEventListener("DOMContentLoaded", function () {
+  const config = window._aprimorabot || {};
   const botId = config.id;
-  const currentPageURL = encodeURIComponent(window.location.href);
-  let chatOpened = false;
+  const pageURL = encodeURIComponent(window.location.href);
 
-  if (!botId) {
-    console.warn("❌ Aprimora Bot Embed: Nenhum ID foi definido. Abortando carregamento.");
-    return;
-  }
+  if (!botId) return;
 
-  // Cria botão flutuante
+  // Botão flutuante
   const launcher = document.createElement("button");
   launcher.style.position = "fixed";
   launcher.style.bottom = "20px";
@@ -30,8 +17,6 @@
   launcher.style.border = "none";
   launcher.style.cursor = "pointer";
   launcher.style.zIndex = "99999";
-  launcher.style.opacity = "0";
-  launcher.style.transition = "opacity 0.5s ease";
   launcher.style.padding = "0";
   launcher.style.overflow = "hidden";
 
@@ -40,23 +25,19 @@
   img.style.width = "100%";
   img.style.height = "100%";
   img.style.borderRadius = "50%";
-  img.style.display = "block";
   launcher.appendChild(img);
 
-  launcher.onclick = function () {
-    const frame = document.getElementById("aprimorabotChatFrame");
-    if (frame) {
-      frame.style.display = (frame.style.display === "none") ? "block" : "none";
+  launcher.onclick = () => {
+    const chat = document.getElementById("aprimorabotChatFrame");
+    if (chat) {
+      chat.style.display = (chat.style.display === "none") ? "block" : "none";
     }
   };
 
   document.body.appendChild(launcher);
-  setTimeout(() => {
-    launcher.style.opacity = "1";
-  }, 500);
 
-  // Saudação (somente se NÃO for autoOpen e houver greetingMessage)
-  if (!config.autoOpen && config.greetingMessage) {
+  // Saudação (se definida)
+  if (config.greetingMessage) {
     const greeting = document.createElement("div");
     greeting.innerText = config.greetingMessage;
     greeting.style.position = "fixed";
@@ -81,7 +62,7 @@
     }, 1000);
   }
 
-  // Cria container do chat
+  // Chat container
   const chatContainer = document.createElement("div");
   chatContainer.id = "aprimorabotChatFrame";
   chatContainer.style.position = "fixed";
@@ -92,37 +73,16 @@
   chatContainer.style.border = "none";
   chatContainer.style.zIndex = "99999";
   chatContainer.style.display = "none";
-  chatContainer.style.boxShadow = "0 0 15px rgba(0,0,0,0.3)";
   chatContainer.style.borderRadius = "10px";
+  chatContainer.style.boxShadow = "0 0 10px rgba(0,0,0,0.15)";
   chatContainer.style.overflow = "hidden";
 
   const iframe = document.createElement("iframe");
-  iframe.src = `https://app.aprimorabot.com.br/version-test/bot/${botId}?page_url=${currentPageURL}`;
+  iframe.src = `https://app.aprimorabot.com.br/version-test/bot/${botId}?page_url=${pageURL}`;
   iframe.style.width = "100%";
   iframe.style.height = "100%";
   iframe.style.border = "0";
+
   chatContainer.appendChild(iframe);
   document.body.appendChild(chatContainer);
-
-  // Smart autoOpen: só se ativado na config
-  if (config.autoOpen === true) {
-    function smartOpen() {
-      if (chatOpened) return;
-
-      const scrollY = window.scrollY;
-      const pageHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercent = (scrollY / pageHeight) * 100;
-
-      if (scrollPercent > 30) {
-        const frame = document.getElementById("aprimorabotChatFrame");
-        if (frame) {
-          frame.style.display = "block";
-          chatOpened = true;
-          window.removeEventListener("scroll", smartOpen);
-        }
-      }
-    }
-
-    window.addEventListener("scroll", smartOpen);
-  }
-})();
+});
