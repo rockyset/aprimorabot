@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
   img.style.display = "block";
   launcher.appendChild(img);
 
-  // Saudação (exibe apenas se autoOpen for falso e houver mensagem)
+  // Saudação (só aparece se autoOpen for falso e houver mensagem)
   if (!config.autoOpen && config.greetingMessage) {
     var greeting = document.createElement("div");
     greeting.innerText = config.greetingMessage;
@@ -89,21 +89,25 @@ document.addEventListener("DOMContentLoaded", function () {
   chatContainer.style.overflow = "hidden";
 
   var iframe = document.createElement("iframe");
-  iframe.src = `https://app.aprimorabot.com.br/bot/${botId}?page_url=${currentPageURL}`;
+  iframe.src = `https://app.aprimorabot.com.br/version-test/bot/${botId}?page_url=${currentPageURL}`;
   iframe.style.width = "100%";
   iframe.style.height = "100%";
   iframe.style.border = "0";
   chatContainer.appendChild(iframe);
-
   document.body.appendChild(chatContainer);
 
-  // ✅ Abre automaticamente com segurança após renderização
-  setTimeout(function () {
-    if (config.autoOpen === true) {
-      var frame = document.getElementById("aprimorabotChatFrame");
-      if (frame) {
-        frame.style.display = "block";
-      }
+  // Função segura para autoOpen com verificação
+  function tryAutoOpen(attempts = 0) {
+    const frame = document.getElementById("aprimorabotChatFrame");
+    if (config.autoOpen === true && frame) {
+      frame.style.display = "block";
+    } else if (attempts < 10) {
+      setTimeout(() => tryAutoOpen(attempts + 1), 300);
+    } else {
+      console.warn("❌ AprimoraBot: autoOpen falhou após várias tentativas.");
     }
-  }, 500);
+  }
+
+  // Inicia a tentativa
+  setTimeout(() => tryAutoOpen(), 300);
 });
