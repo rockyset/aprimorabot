@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  var config = window._rockyset || {};
+  var config = window._aprimorabot || {};
   var botId = config.id;
 
   if (!botId) {
@@ -7,26 +7,63 @@ document.addEventListener("DOMContentLoaded", function () {
     return;
   }
 
-  // Captura a URL atual da página
   var currentPageURL = encodeURIComponent(window.location.href);
 
   // Cria botão flutuante
   var launcher = document.createElement('button');
-  launcher.innerHTML = "💬";
   launcher.style.position = "fixed";
   launcher.style.bottom = "20px";
   launcher.style.right = "20px";
   launcher.style.width = "60px";
   launcher.style.height = "60px";
   launcher.style.borderRadius = "50%";
-  launcher.style.backgroundColor = "#007bff";
-  launcher.style.color = "#fff";
+  launcher.style.backgroundColor = config.primaryColor || "#007bff";
   launcher.style.border = "none";
   launcher.style.cursor = "pointer";
   launcher.style.zIndex = "99999";
+  launcher.style.opacity = "0";
+  launcher.style.transition = "opacity 0.5s ease";
+  launcher.style.padding = "0";
+  launcher.style.overflow = "hidden";
 
+  // Adiciona imagem (esperada como obrigatória)
+  var img = document.createElement("img");
+  img.src = config.iconUrl;
+  img.style.width = "100%";
+  img.style.height = "100%";
+  img.style.borderRadius = "50%";
+  img.style.display = "block";
+  launcher.appendChild(img);
+
+  // Saudação inicial (opcional)
+  if (config.greetingMessage) {
+    var greeting = document.createElement("div");
+    greeting.innerText = config.greetingMessage;
+    greeting.style.position = "fixed";
+    greeting.style.bottom = "90px";
+    greeting.style.right = "20px";
+    greeting.style.padding = "10px 15px";
+    greeting.style.backgroundColor = config.secondaryColor || "#ffffff";
+    greeting.style.color = "#000";
+    greeting.style.borderRadius = "10px";
+    greeting.style.boxShadow = "0 0 10px rgba(0,0,0,0.1)";
+    greeting.style.zIndex = "99999";
+    greeting.style.opacity = "0";
+    greeting.style.transition = "opacity 0.5s ease";
+    greeting.style.fontFamily = "Arial, sans-serif";
+    greeting.style.fontSize = "14px";
+    greeting.style.maxWidth = "260px";
+    greeting.style.lineHeight = "1.4";
+    document.body.appendChild(greeting);
+
+    setTimeout(function () {
+      greeting.style.opacity = "1";
+    }, 1000);
+  }
+
+  // Ação ao clicar no botão
   launcher.onclick = function () {
-    var iframe = document.getElementById("rockysetChatFrame");
+    var iframe = document.getElementById("aprimorabotChatFrame");
     if (iframe) {
       iframe.style.display = (iframe.style.display === "none") ? "block" : "none";
     }
@@ -34,9 +71,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.body.appendChild(launcher);
 
+  // Fade-in do botão
+  setTimeout(function () {
+    launcher.style.opacity = "1";
+  }, 500);
+
   // Cria container do chat
   var chatContainer = document.createElement("div");
-  chatContainer.id = "rockysetChatFrame";
+  chatContainer.id = "aprimorabotChatFrame";
   chatContainer.style.position = "fixed";
   chatContainer.style.bottom = "80px";
   chatContainer.style.right = "20px";
@@ -46,14 +88,15 @@ document.addEventListener("DOMContentLoaded", function () {
   chatContainer.style.zIndex = "99999";
   chatContainer.style.display = "none";
   chatContainer.style.boxShadow = "0 0 15px rgba(0,0,0,0.3)";
+  chatContainer.style.borderRadius = "10px";
+  chatContainer.style.overflow = "hidden";
 
-  // Cria o iframe e adiciona a page_url como parâmetro
+  // Cria o iframe
   var iframe = document.createElement("iframe");
   iframe.src = `https://app.aprimorabot.com.br/version-test/bot/${botId}?page_url=${currentPageURL}`;
   iframe.style.width = "100%";
   iframe.style.height = "100%";
   iframe.style.border = "0";
-  iframe.style.borderRadius = "10px";
 
   chatContainer.appendChild(iframe);
   document.body.appendChild(chatContainer);
