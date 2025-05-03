@@ -8,16 +8,15 @@
     }
   }
 
-  // Config presente, inicia normalmente
   const config = window._aprimorabot;
   const botId = config.id;
+  const currentPageURL = encodeURIComponent(window.location.href);
+  let chatOpened = false;
 
   if (!botId) {
     console.warn("❌ Aprimora Bot Embed: Nenhum ID foi definido. Abortando carregamento.");
     return;
   }
-
-  const currentPageURL = encodeURIComponent(window.location.href);
 
   // Cria botão flutuante
   const launcher = document.createElement("button");
@@ -44,6 +43,19 @@
   img.style.display = "block";
   launcher.appendChild(img);
 
+  launcher.onclick = function () {
+    const frame = document.getElementById("aprimorabotChatFrame");
+    if (frame) {
+      frame.style.display = (frame.style.display === "none") ? "block" : "none";
+    }
+  };
+
+  document.body.appendChild(launcher);
+  setTimeout(() => {
+    launcher.style.opacity = "1";
+  }, 500);
+
+  // Saudação (somente se NÃO for autoOpen e houver greetingMessage)
   if (!config.autoOpen && config.greetingMessage) {
     const greeting = document.createElement("div");
     greeting.innerText = config.greetingMessage;
@@ -69,18 +81,7 @@
     }, 1000);
   }
 
-  launcher.onclick = function () {
-    const frame = document.getElementById("aprimorabotChatFrame");
-    if (frame) {
-      frame.style.display = (frame.style.display === "none") ? "block" : "none";
-    }
-  };
-
-  document.body.appendChild(launcher);
-  setTimeout(() => {
-    launcher.style.opacity = "1";
-  }, 500);
-
+  // Cria container do chat
   const chatContainer = document.createElement("div");
   chatContainer.id = "aprimorabotChatFrame";
   chatContainer.style.position = "fixed";
@@ -101,18 +102,27 @@
   iframe.style.height = "100%";
   iframe.style.border = "0";
   chatContainer.appendChild(iframe);
-
   document.body.appendChild(chatContainer);
 
-  // MutationObserver para detectar quando container estiver no DOM
-  const observer = new MutationObserver(() => {
-    const frame = document.getElementById("aprimorabotChatFrame");
-    if (config.autoOpen === true && frame) {
-      frame.style.display = "block";
-      observer.disconnect();
+  // Smart autoOpen: só se ativado na config
+  if (config.autoOpen === true) {
+    function smartOpen() {
+      if (chatOpened) return;
+
+      const scrollY = window.scrollY;
+      const pageHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = (scrollY / pageHeight) * 100;
+
+      if (scrollPercent > 30) {
+        const frame = document.getElementById("aprimorabotChatFrame");
+        if (frame) {
+          frame.style.display = "block";
+          chatOpened = true;
+          window.removeEventListener("scroll", smartOpen);
+        }
+      }
     }
-  });
 
-  observer.observe(document.body, { childList: true, subtree: true });
-
-})(0);
+    window.addEventListener("scroll", smartOpen);
+  }
+})();
