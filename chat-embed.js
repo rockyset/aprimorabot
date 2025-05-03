@@ -1,5 +1,15 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const config = window._aprimorabot || {};
+(function waitForConfig(attempts = 0) {
+  if (typeof window._aprimorabot === "undefined") {
+    if (attempts < 20) {
+      return setTimeout(() => waitForConfig(attempts + 1), 200);
+    } else {
+      console.warn("❌ Aprimora Bot: Configuração não encontrada após várias tentativas.");
+      return;
+    }
+  }
+
+  // Config presente, inicia normalmente
+  const config = window._aprimorabot;
   const botId = config.id;
 
   if (!botId) {
@@ -34,7 +44,6 @@ document.addEventListener("DOMContentLoaded", function () {
   img.style.display = "block";
   launcher.appendChild(img);
 
-  // Saudação (exibe somente se não for autoOpen e houver greetingMessage)
   if (!config.autoOpen && config.greetingMessage) {
     const greeting = document.createElement("div");
     greeting.innerText = config.greetingMessage;
@@ -72,7 +81,6 @@ document.addEventListener("DOMContentLoaded", function () {
     launcher.style.opacity = "1";
   }, 500);
 
-  // Cria container do chat
   const chatContainer = document.createElement("div");
   chatContainer.id = "aprimorabotChatFrame";
   chatContainer.style.position = "fixed";
@@ -94,16 +102,17 @@ document.addEventListener("DOMContentLoaded", function () {
   iframe.style.border = "0";
   chatContainer.appendChild(iframe);
 
-  // Usa MutationObserver para autoOpen somente quando chat estiver no DOM
-  const observer = new MutationObserver((mutations, obs) => {
+  document.body.appendChild(chatContainer);
+
+  // MutationObserver para detectar quando container estiver no DOM
+  const observer = new MutationObserver(() => {
     const frame = document.getElementById("aprimorabotChatFrame");
-    if (frame && config.autoOpen === true) {
+    if (config.autoOpen === true && frame) {
       frame.style.display = "block";
-      obs.disconnect(); // Para de observar após abrir
+      observer.disconnect();
     }
   });
 
   observer.observe(document.body, { childList: true, subtree: true });
 
-  document.body.appendChild(chatContainer);
-});
+})(0);
