@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
   launcher.style.padding = "0";
   launcher.style.overflow = "hidden";
 
-  // Adiciona imagem obrigatória
+  // Adiciona imagem do botão
   var img = document.createElement("img");
   img.src = config.iconUrl;
   img.style.width = "100%";
@@ -35,8 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
   img.style.display = "block";
   launcher.appendChild(img);
 
-  // Saudação inicial (opcional)
-  if (config.greetingMessage) {
+  // Saudação (apenas se autoOpen for false e mensagem existir)
+  if (!config.autoOpen && config.greetingMessage) {
     var greeting = document.createElement("div");
     greeting.innerText = config.greetingMessage;
     greeting.style.position = "fixed";
