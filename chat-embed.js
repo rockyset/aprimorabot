@@ -100,13 +100,21 @@ document.addEventListener("DOMContentLoaded", function () {
   chatContainer.appendChild(iframe);
   document.body.appendChild(chatContainer);
 
-  // Abre automaticamente se configurado (com delay para garantir DOM pronto)
-  setTimeout(function () {
+  // Função robusta para garantir abertura automática
+  function tryAutoOpen(retries = 10) {
     if (config.autoOpen === true) {
       var iframeEl = document.getElementById("aprimorabotChatFrame");
       if (iframeEl) {
         iframeEl.style.display = "block";
+      } else if (retries > 0) {
+        setTimeout(function () {
+          tryAutoOpen(retries - 1);
+        }, 100);
       }
     }
-  }, 200); // leve delay garante que o elemento está pronto
+  }
+
+  setTimeout(function () {
+    tryAutoOpen();
+  }, 300);
 });
