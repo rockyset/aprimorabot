@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
   chatContainer.style.overflow = "hidden";
 
   const iframe = document.createElement("iframe");
-  iframe.src = `https://app.aprimorabot.com.br/version-test/bot/${botId}?page_url=${pageURL}`;
+  iframe.src = `https://app.aprimorabot.com.br/bot/${botId}?page_url=${pageURL}`;
   iframe.style.width = "100%";
   iframe.style.height = "100%";
   iframe.style.border = "0";
