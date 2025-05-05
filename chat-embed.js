@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (!botId) return;
 
-  // Botão flutuante
+  // Widget Botão flutuante
   const launcher = document.createElement("button");
   launcher.style.position = "fixed";
   launcher.style.bottom = "20px";
