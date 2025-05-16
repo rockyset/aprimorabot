@@ -85,4 +85,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
   chatContainer.appendChild(iframe);
   document.body.appendChild(chatContainer);
+
+  // 🔓 Função global para abrir o bot programaticamente
+  window.abrirAprimoraBot = function () {
+    const chat = document.getElementById("aprimorabotChatFrame");
+    if (chat) {
+      chat.style.display = "block";
+    }
+  };
+
+  // 📌 Abertura via botão com ID específico (ex: Elementor)
+  const externalButton = document.getElementById("abrir-aprimorabot");
+  if (externalButton) {
+    externalButton.addEventListener("click", function () {
+      window.abrirAprimoraBot();
+    });
+  }
 });
