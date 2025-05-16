@@ -1,3 +1,22 @@
+// ✅ Define a função global antes do DOM carregar
+window.aprimorabot = {
+  open: function () {
+    const chat = document.getElementById("aprimorabotChatFrame");
+    if (chat) {
+      chat.style.display = "block";
+    } else {
+      // Se ainda não carregou, tenta novamente após 300ms
+      setTimeout(() => window.aprimorabot.open(), 300);
+    }
+  },
+  toggle: function () {
+    const chat = document.getElementById("aprimorabotChatFrame");
+    if (chat) {
+      chat.style.display = (chat.style.display === "none") ? "block" : "none";
+    }
+  }
+};
+
 document.addEventListener("DOMContentLoaded", function () {
   const config = window._aprimorabot || {};
   const botId = config.id;
@@ -5,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (!botId) return;
 
-  // Widget Botão flutuante
+  // Botão flutuante
   const launcher = document.createElement("button");
   launcher.className = "aprimorabot-launcher";
   launcher.style.position = "fixed";
@@ -28,16 +47,10 @@ document.addEventListener("DOMContentLoaded", function () {
   img.style.borderRadius = "50%";
   launcher.appendChild(img);
 
-  launcher.onclick = () => {
-    const chat = document.getElementById("aprimorabotChatFrame");
-    if (chat) {
-      chat.style.display = (chat.style.display === "none") ? "block" : "none";
-    }
-  };
-
+  launcher.onclick = () => window.aprimorabot.toggle();
   document.body.appendChild(launcher);
 
-  // Saudação (se definida)
+  // Saudação (opcional)
   if (config.greetingMessage) {
     const greeting = document.createElement("div");
     greeting.innerText = config.greetingMessage;
@@ -63,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 1000);
   }
 
-  // Chat container
+  // Chat
   const chatContainer = document.createElement("div");
   chatContainer.id = "aprimorabotChatFrame";
   chatContainer.style.position = "fixed";
@@ -86,18 +99,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
   chatContainer.appendChild(iframe);
   document.body.appendChild(chatContainer);
-
-  // ✅ API global no estilo Leadster
-  window.aprimorabot = {
-    open: function () {
-      const chat = document.getElementById("aprimorabotChatFrame");
-      if (chat) chat.style.display = "block";
-    },
-    toggle: function () {
-      const chat = document.getElementById("aprimorabotChatFrame");
-      if (chat) {
-        chat.style.display = (chat.style.display === "none") ? "block" : "none";
-      }
-    }
-  };
 });
