@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Widget Botão flutuante
   const launcher = document.createElement("button");
+  launcher.className = "aprimorabot-launcher";
   launcher.style.position = "fixed";
   launcher.style.bottom = "20px";
   launcher.style.right = "20px";
@@ -86,19 +87,17 @@ document.addEventListener("DOMContentLoaded", function () {
   chatContainer.appendChild(iframe);
   document.body.appendChild(chatContainer);
 
-  // 🔓 Função global para abrir o bot programaticamente
-  window.abrirAprimoraBot = function () {
-    const chat = document.getElementById("aprimorabotChatFrame");
-    if (chat) {
-      chat.style.display = "block";
+  // 🔓 API global estilo Leadster
+  window.aprimorabot = {
+    open: function () {
+      const chat = document.getElementById("aprimorabotChatFrame");
+      if (chat) chat.style.display = "block";
+    },
+    toggle: function () {
+      const chat = document.getElementById("aprimorabotChatFrame");
+      if (chat) {
+        chat.style.display = (chat.style.display === "none") ? "block" : "none";
+      }
     }
   };
-
-  // 📌 Abertura via botão com ID específico (ex: Elementor)
-  const externalButton = document.getElementById("abrir-aprimorabot");
-  if (externalButton) {
-    externalButton.addEventListener("click", function () {
-      window.abrirAprimoraBot();
-    });
-  }
 });
