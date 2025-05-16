@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
   chatContainer.appendChild(iframe);
   document.body.appendChild(chatContainer);
 
-  // 🔓 API global estilo Leadster
+  // ✅ API global no estilo Leadster
   window.aprimorabot = {
     open: function () {
       const chat = document.getElementById("aprimorabotChatFrame");
