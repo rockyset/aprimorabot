@@ -1,16 +1,20 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const inputSession = document.getElementById("session_id_input");
-  const sessionId = inputSession?.value || null;
+  // Função para gerar um ID aleatório estilo Bubble
+  const generateSessionId = () => {
+    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let result = "";
+    for (let i = 0; i < 12; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  };
 
   const config = window._aprimorabot || {};
   const botId = config.id;
+  const sessionId = generateSessionId(); // 🔄 Geração local do ID
   const pageURL = encodeURIComponent(window.location.href);
 
-  // Injeta session_id no config global (útil para debug e outras chamadas)
-  config.session_id = sessionId;
-  window._aprimorabot = config;
-
-  if (!botId || !sessionId) return;
+  if (!botId) return;
 
   let accessRegistered = false;
 
@@ -43,6 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (chat) {
       chat.style.display = wasClosed ? "block" : "none";
 
+      // 🟢 Registra acesso ao abrir o bot (uma única vez)
       if (wasClosed && !accessRegistered) {
         fetch("https://app.aprimorabot.com.br/api/1.1/wf/registrar_acesso", {
           method: "POST",
@@ -62,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.body.appendChild(launcher);
 
-  // Saudação
+  // Saudação (opcional)
   if (config.greetingMessage) {
     const greeting = document.createElement("div");
     greeting.innerText = config.greetingMessage;
@@ -88,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 1000);
   }
 
-  // Container do chat
+  // Chat container
   const chatContainer = document.createElement("div");
   chatContainer.id = "aprimorabotChatFrame";
   chatContainer.style.position = "fixed";
