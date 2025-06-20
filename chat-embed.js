@@ -49,8 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
           body: JSON.stringify({
             bot_id: botId,
             session_id: sessionId,
-            page_url: window.location.href,
-            tipo: "ABERTURA"
+            page_url: window.location.href
           })
         })
         .then(res => {
