@@ -1,8 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
+  const inputSession = document.getElementById("session_id_input");
+  const sessionId = inputSession?.value || null;
+
   const config = window._aprimorabot || {};
   const botId = config.id;
-  const sessionId = config.session_id;
   const pageURL = encodeURIComponent(window.location.href);
+
+  // Injeta session_id no config global (útil para debug e outras chamadas)
+  config.session_id = sessionId;
+  window._aprimorabot = config;
 
   if (!botId || !sessionId) return;
 
@@ -37,7 +43,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (chat) {
       chat.style.display = wasClosed ? "block" : "none";
 
-      // 🔁 Registra acesso somente na primeira abertura
       if (wasClosed && !accessRegistered) {
         fetch("https://app.aprimorabot.com.br/api/1.1/wf/registrar_acesso", {
           method: "POST",
@@ -57,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.body.appendChild(launcher);
 
-  // Saudação (opcional)
+  // Saudação
   if (config.greetingMessage) {
     const greeting = document.createElement("div");
     greeting.innerText = config.greetingMessage;
@@ -83,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 1000);
   }
 
-  // Chat container
+  // Container do chat
   const chatContainer = document.createElement("div");
   chatContainer.id = "aprimorabotChatFrame";
   chatContainer.style.position = "fixed";
