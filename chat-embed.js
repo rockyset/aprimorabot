@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (!botId) return;
 
-  // 🔐 Gera session_id no JS e injeta no objeto global
+  // 🔐 Geração do session_id diretamente no JS
   const sessionId = generateRandomSessionId();
   window._aprimorabot.session_id = sessionId;
 
@@ -39,8 +39,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (chat) {
       chat.style.display = wasClosed ? "block" : "none";
+      console.log("Botão clicado — estava fechado?", wasClosed);
 
       if (wasClosed && !accessRegistered) {
+        console.log("Tentando registrar acesso:", sessionId);
         fetch("https://aprimorabot.bubbleapps.io/version-test/api/1.1/wf/registrar_acesso_jsapi/initialize", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -52,11 +54,11 @@ document.addEventListener("DOMContentLoaded", function () {
           })
         })
         .then(res => {
-          if (!res.ok) throw new Error("API retornou erro");
+          console.log("Fetch respondido:", res.status);
           return res.json();
         })
-        .then(data => console.log("Acesso registrado com sucesso:", data))
-        .catch(err => console.error("Erro ao registrar acesso:", err));
+        .then(data => console.log("Resposta do workflow:", data))
+        .catch(err => console.error("Erro no fetch:", err));
 
         accessRegistered = true;
       }
@@ -115,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
   chatContainer.appendChild(iframe);
   document.body.appendChild(chatContainer);
 
-  // Função auxiliar para gerar session_id
+  // 🔧 Geração do session_id
   function generateRandomSessionId() {
     return Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
   }
