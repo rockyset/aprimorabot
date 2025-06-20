@@ -1,9 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
   const config = window._aprimorabot || {};
   const botId = config.id;
+  const sessionId = config.session_id;
   const pageURL = encodeURIComponent(window.location.href);
 
-  if (!botId) return;
+  if (!botId || !sessionId) return;
+
+  let accessRegistered = false;
 
   // Botão flutuante
   const launcher = document.createElement("button");
@@ -29,8 +32,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
   launcher.onclick = () => {
     const chat = document.getElementById("aprimorabotChatFrame");
+    const wasClosed = chat && chat.style.display === "none";
+
     if (chat) {
-      chat.style.display = (chat.style.display === "none") ? "block" : "none";
+      chat.style.display = wasClosed ? "block" : "none";
+
+      // 🔁 Registra acesso somente na primeira abertura
+      if (wasClosed && !accessRegistered) {
+        fetch("https://app.aprimorabot.com.br/api/1.1/wf/registrar_acesso", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            bot_id: botId,
+            session_id: sessionId,
+            page_url: window.location.href,
+            tipo: "ABERTURA"
+          })
+        }).catch(err => console.error("Erro ao registrar acesso:", err));
+
+        accessRegistered = true;
+      }
     }
   };
 
