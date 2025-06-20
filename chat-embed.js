@@ -1,20 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Função para gerar um ID aleatório estilo Bubble
-  const generateSessionId = () => {
-    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let result = "";
-    for (let i = 0; i < 12; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
-  };
-
   const config = window._aprimorabot || {};
   const botId = config.id;
-  const sessionId = generateSessionId(); // 🔄 Geração local do ID
   const pageURL = encodeURIComponent(window.location.href);
 
   if (!botId) return;
+
+  // 🔐 Geração do session_id diretamente no JS
+  const sessionId = generateRandomSessionId();
+  window._aprimorabot.session_id = sessionId;
 
   let accessRegistered = false;
 
@@ -47,7 +40,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (chat) {
       chat.style.display = wasClosed ? "block" : "none";
 
-      // 🟢 Registra acesso ao abrir o bot (uma única vez)
       if (wasClosed && !accessRegistered) {
         fetch("https://app.aprimorabot.com.br/api/1.1/wf/registrar_acesso", {
           method: "POST",
@@ -67,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.body.appendChild(launcher);
 
-  // Saudação (opcional)
+  // Saudação
   if (config.greetingMessage) {
     const greeting = document.createElement("div");
     greeting.innerText = config.greetingMessage;
@@ -93,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 1000);
   }
 
-  // Chat container
+  // Chat
   const chatContainer = document.createElement("div");
   chatContainer.id = "aprimorabotChatFrame";
   chatContainer.style.position = "fixed";
@@ -116,4 +108,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   chatContainer.appendChild(iframe);
   document.body.appendChild(chatContainer);
+
+  // 🔧 Função para gerar Session ID aleatório
+  function generateRandomSessionId() {
+    return Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
+  }
 });
