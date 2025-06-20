@@ -5,12 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (!botId) return;
 
-  // 🔐 Geração do session_id diretamente no JS
-  const sessionId = generateRandomSessionId();
-  window._aprimorabot.session_id = sessionId;
-
-  let accessRegistered = false;
-
   // Botão flutuante
   const launcher = document.createElement("button");
   launcher.style.position = "fixed";
@@ -35,32 +29,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   launcher.onclick = () => {
     const chat = document.getElementById("aprimorabotChatFrame");
-    const wasClosed = chat && chat.style.display === "none";
-
     if (chat) {
-      chat.style.display = wasClosed ? "block" : "none";
-      console.log("Botão clicado — estava fechado?", wasClosed);
-
-      if (wasClosed && !accessRegistered) {
-        console.log("Tentando registrar acesso:", sessionId);
-        fetch("https://aprimorabot.bubbleapps.io/api/1.1/wf/registrar_acesso_jsapi", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            bot_id: botId,
-            session_id: sessionId,
-            page_url: window.location.href
-          })
-        })
-        .then(res => {
-          console.log("Fetch respondido:", res.status);
-          return res.json();
-        })
-        .then(data => console.log("Resposta do workflow:", data))
-        .catch(err => console.error("Erro no fetch:", err));
-
-        accessRegistered = true;
-      }
+      chat.style.display = (chat.style.display === "none") ? "block" : "none";
     }
   };
 
@@ -115,9 +85,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
   chatContainer.appendChild(iframe);
   document.body.appendChild(chatContainer);
-
-  // 🔧 Geração do session_id
-  function generateRandomSessionId() {
-    return Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
-  }
 });
