@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
       chat.style.display = wasClosed ? "block" : "none";
 
       if (wasClosed && !accessRegistered) {
-        fetch("https://aprimorabot.bubbleapps.io/version-test/api/1.1/wf/registrar_acesso_jsapi", {
+        fetch("https://aprimorabot.bubbleapps.io/version-test/api/1.1/wf/registrar_acesso_jsapi/initialize", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
