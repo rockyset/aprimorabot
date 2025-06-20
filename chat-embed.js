@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (wasClosed && !accessRegistered) {
         console.log("Tentando registrar acesso:", sessionId);
-        fetch("https://aprimorabot.bubbleapps.io/version-test/api/1.1/wf/registrar_acesso_jsapi", {
+        fetch("https://aprimorabot.bubbleapps.io/api/1.1/wf/registrar_acesso_jsapi", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
