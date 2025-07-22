@@ -36,52 +36,56 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.body.appendChild(launcher);
 
-  // Saudação com botão de fechar
+  // Saudação com X externo
   if (config.greetingMessage) {
+    const greetingWrapper = document.createElement("div");
+    greetingWrapper.style.position = "fixed";
+    greetingWrapper.style.bottom = "90px";
+    greetingWrapper.style.right = "20px";
+    greetingWrapper.style.zIndex = "99999";
+
     const greeting = document.createElement("div");
-    greeting.style.position = "fixed";
-    greeting.style.bottom = "90px";
-    greeting.style.right = "20px";
+    greeting.innerText = config.greetingMessage;
     greeting.style.padding = "10px 15px";
     greeting.style.backgroundColor = config.secondaryColor || "#ffffff";
     greeting.style.color = "#000";
     greeting.style.borderRadius = "10px";
     greeting.style.boxShadow = "0 0 10px rgba(0,0,0,0.1)";
-    greeting.style.zIndex = "99999";
-    greeting.style.opacity = "0";
-    greeting.style.transition = "opacity 0.5s ease";
     greeting.style.fontFamily = "Arial, sans-serif";
     greeting.style.fontSize = "14px";
     greeting.style.maxWidth = "260px";
     greeting.style.lineHeight = "1.4";
-    greeting.style.position = "fixed";
-    greeting.style.display = "flex";
-    greeting.style.alignItems = "center";
-    greeting.style.justifyContent = "space-between";
+    greeting.style.opacity = "0";
+    greeting.style.transition = "opacity 0.5s ease";
 
-    // Conteúdo da saudação com botão de fechar
-    greeting.innerHTML = `
-      <span style="flex: 1; padding-right: 10px;">${config.greetingMessage}</span>
-      <button id="aprimorabotCloseGreeting" style="
-        background: transparent;
-        border: none;
-        color: #000;
-        font-size: 16px;
-        cursor: pointer;
-        line-height: 1;
-        ">×</button>
-    `;
+    // Botão de fechar fora da caixa
+    const closeButton = document.createElement("button");
+    closeButton.innerText = "×";
+    closeButton.style.position = "absolute";
+    closeButton.style.top = "-10px";
+    closeButton.style.right = "-10px";
+    closeButton.style.width = "24px";
+    closeButton.style.height = "24px";
+    closeButton.style.borderRadius = "50%";
+    closeButton.style.backgroundColor = "#000";
+    closeButton.style.color = "#fff";
+    closeButton.style.border = "none";
+    closeButton.style.cursor = "pointer";
+    closeButton.style.fontSize = "16px";
+    closeButton.style.lineHeight = "1";
+    closeButton.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)";
 
-    document.body.appendChild(greeting);
+    closeButton.onclick = () => {
+      greetingWrapper.style.display = "none";
+    };
+
+    greetingWrapper.appendChild(greeting);
+    greetingWrapper.appendChild(closeButton);
+    document.body.appendChild(greetingWrapper);
 
     setTimeout(() => {
       greeting.style.opacity = "1";
     }, 1000);
-
-    // Evento do botão de fechar
-    document.getElementById("aprimorabotCloseGreeting").onclick = () => {
-      greeting.style.display = "none";
-    };
   }
 
   // Chat container
