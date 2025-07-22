@@ -36,9 +36,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.body.appendChild(launcher);
 
-  // Saudação com X externo e animação pulse
+  // Saudação com X externo, pulse e clique para abrir o chat
   if (config.greetingMessage) {
-    // Adiciona animação via CSS global
+    // CSS da animação
     const style = document.createElement("style");
     style.innerHTML = `
       @keyframes aprimoraPulse {
@@ -71,6 +71,15 @@ document.addEventListener("DOMContentLoaded", function () {
     greeting.style.lineHeight = "1.4";
     greeting.style.opacity = "0";
     greeting.style.transition = "opacity 0.5s ease";
+    greeting.style.cursor = "pointer";
+
+    // Clique na saudação abre o chat
+    greeting.onclick = () => {
+      const chat = document.getElementById("aprimorabotChatFrame");
+      if (chat) {
+        chat.style.display = "block";
+      }
+    };
 
     // Botão de fechar fora da caixa
     const closeButton = document.createElement("button");
@@ -107,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
       greeting.classList.add("aprimora-pulse");
       setTimeout(() => {
         greeting.classList.remove("aprimora-pulse");
-      }, 600); // Tempo da animação
+      }, 600);
     }, 10000);
   }
 
