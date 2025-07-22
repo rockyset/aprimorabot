@@ -39,11 +39,10 @@ document.addEventListener("DOMContentLoaded", function () {
   // Saudação com botão de fechar
   if (config.greetingMessage) {
     const greeting = document.createElement("div");
-    greeting.innerText = config.greetingMessage;
     greeting.style.position = "fixed";
     greeting.style.bottom = "90px";
     greeting.style.right = "20px";
-    greeting.style.padding = "10px 35px 10px 15px";
+    greeting.style.padding = "10px 15px";
     greeting.style.backgroundColor = config.secondaryColor || "#ffffff";
     greeting.style.color = "#000";
     greeting.style.borderRadius = "10px";
@@ -60,29 +59,29 @@ document.addEventListener("DOMContentLoaded", function () {
     greeting.style.alignItems = "center";
     greeting.style.justifyContent = "space-between";
 
-    // Botão de fechar
-    const closeButton = document.createElement("button");
-    closeButton.innerText = "×";
-    closeButton.style.background = "transparent";
-    closeButton.style.border = "none";
-    closeButton.style.color = "#000";
-    closeButton.style.fontSize = "16px";
-    closeButton.style.cursor = "pointer";
-    closeButton.style.marginLeft = "10px";
-    closeButton.style.position = "absolute";
-    closeButton.style.top = "5px";
-    closeButton.style.right = "8px";
+    // Conteúdo da saudação com botão de fechar
+    greeting.innerHTML = `
+      <span style="flex: 1; padding-right: 10px;">${config.greetingMessage}</span>
+      <button id="aprimorabotCloseGreeting" style="
+        background: transparent;
+        border: none;
+        color: #000;
+        font-size: 16px;
+        cursor: pointer;
+        line-height: 1;
+        ">×</button>
+    `;
 
-    closeButton.onclick = () => {
-      greeting.style.display = "none";
-    };
-
-    greeting.appendChild(closeButton);
     document.body.appendChild(greeting);
 
     setTimeout(() => {
       greeting.style.opacity = "1";
     }, 1000);
+
+    // Evento do botão de fechar
+    document.getElementById("aprimorabotCloseGreeting").onclick = () => {
+      greeting.style.display = "none";
+    };
   }
 
   // Chat container
