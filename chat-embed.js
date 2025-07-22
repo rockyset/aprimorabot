@@ -36,14 +36,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.body.appendChild(launcher);
 
-  // Saudação (opcional)
+  // Saudação com botão de fechar
   if (config.greetingMessage) {
     const greeting = document.createElement("div");
     greeting.innerText = config.greetingMessage;
     greeting.style.position = "fixed";
     greeting.style.bottom = "90px";
     greeting.style.right = "20px";
-    greeting.style.padding = "10px 15px";
+    greeting.style.padding = "10px 35px 10px 15px";
     greeting.style.backgroundColor = config.secondaryColor || "#ffffff";
     greeting.style.color = "#000";
     greeting.style.borderRadius = "10px";
@@ -55,6 +55,29 @@ document.addEventListener("DOMContentLoaded", function () {
     greeting.style.fontSize = "14px";
     greeting.style.maxWidth = "260px";
     greeting.style.lineHeight = "1.4";
+    greeting.style.position = "fixed";
+    greeting.style.display = "flex";
+    greeting.style.alignItems = "center";
+    greeting.style.justifyContent = "space-between";
+
+    // Botão de fechar
+    const closeButton = document.createElement("button");
+    closeButton.innerText = "×";
+    closeButton.style.background = "transparent";
+    closeButton.style.border = "none";
+    closeButton.style.color = "#000";
+    closeButton.style.fontSize = "16px";
+    closeButton.style.cursor = "pointer";
+    closeButton.style.marginLeft = "10px";
+    closeButton.style.position = "absolute";
+    closeButton.style.top = "5px";
+    closeButton.style.right = "8px";
+
+    closeButton.onclick = () => {
+      greeting.style.display = "none";
+    };
+
+    greeting.appendChild(closeButton);
     document.body.appendChild(greeting);
 
     setTimeout(() => {
