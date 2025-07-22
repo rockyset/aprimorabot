@@ -90,8 +90,8 @@ document.addEventListener("DOMContentLoaded", function () {
     closeButton.style.width = "24px";
     closeButton.style.height = "24px";
     closeButton.style.borderRadius = "50%";
-    closeButton.style.backgroundColor = "#000";
-    closeButton.style.color = "#fff";
+    closeButton.style.backgroundColor = "#fff";
+    closeButton.style.color = "#000";
     closeButton.style.border = "none";
     closeButton.style.cursor = "pointer";
     closeButton.style.fontSize = "16px";
