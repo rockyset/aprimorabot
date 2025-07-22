@@ -36,8 +36,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.body.appendChild(launcher);
 
-  // Saudação com X externo
+  // Saudação com X externo e animação pulse
   if (config.greetingMessage) {
+    // Adiciona animação via CSS global
+    const style = document.createElement("style");
+    style.innerHTML = `
+      @keyframes aprimoraPulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+      }
+      .aprimora-pulse {
+        animation: aprimoraPulse 0.6s ease;
+      }
+    `;
+    document.head.appendChild(style);
+
     const greetingWrapper = document.createElement("div");
     greetingWrapper.style.position = "fixed";
     greetingWrapper.style.bottom = "90px";
@@ -76,6 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
     closeButton.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)";
 
     closeButton.onclick = () => {
+      clearInterval(pulseInterval);
       greetingWrapper.style.display = "none";
     };
 
@@ -86,6 +101,14 @@ document.addEventListener("DOMContentLoaded", function () {
     setTimeout(() => {
       greeting.style.opacity = "1";
     }, 1000);
+
+    // Pulse a cada 10 segundos
+    const pulseInterval = setInterval(() => {
+      greeting.classList.add("aprimora-pulse");
+      setTimeout(() => {
+        greeting.classList.remove("aprimora-pulse");
+      }, 600); // Tempo da animação
+    }, 10000);
   }
 
   // Chat container
